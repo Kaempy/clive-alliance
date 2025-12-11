@@ -16,19 +16,5 @@ module.exports = {
     '\\.(png|jpg|jpeg|gif|svg)$': '<rootDir>/__mocks__/fileMock.js',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
-  // collectCoverageFrom: [
-  //   'src/**/*.{js,jsx,ts,tsx}',
-  //   '!src/**/*.d.ts',
-  //   '!src/**/index.{js,jsx,ts,tsx}',
-  //   '!src/**/*.stories.{js,jsx,ts,tsx}',
-  // ],
-  // coverageThreshold: {
-  //   global: {
-  //     branches: 70,
-  //     functions: 70,
-  //     lines: 70,
-  //     statements: 70,
-  //   },
-  // },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };
