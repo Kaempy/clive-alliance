@@ -265,10 +265,16 @@ jest.mock('class-variance-authority', () => ({
 }));
 
 // Mock date-fns
-jest.mock('date-fns', () => ({
-  formatDistanceToNow: jest.fn(() => '20 minutes ago'),
-  subMinutes: jest.fn(() => new Date()),
-}));
+jest.mock('date-fns', () => {
+  const actual = jest.requireActual('date-fns');
+  return {
+    __esModule: true,
+    ...actual,
+    format: jest.fn((date, formatStr) => actual.format(date, formatStr)),
+    formatDistanceToNow: jest.fn(() => '20 minutes ago'),
+    subMinutes: jest.fn(() => new Date()),
+  };
+});
 
 // Mock react-native-dropdown-picker (align with default import usage)
 jest.mock('react-native-dropdown-picker', () => {

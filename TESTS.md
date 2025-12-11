@@ -2,6 +2,8 @@
 
 Aligned to `TODO.md`: six+ unit/component suites today, with a roadmap for integration, performance, accessibility, and E2E coverage on the mobile flows.
 
+**Preview demo:** [Jam recording](https://jam.dev/c/32015a0b-bdc9-4838-8aeb-0cd4f8bd4a53)
+
 ## Stack
 
 - Jest 29.7 with `jest-expo`

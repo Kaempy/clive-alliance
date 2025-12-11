@@ -2,6 +2,8 @@
 
 React Native + Expo mobile challenge aligned to the requirements in `TODO.md`: low-RAM Android support, OTP login, paginated transactions, money transfer, and testing.
 
+**Preview demo:** [Jam recording](https://jam.dev/c/32015a0b-bdc9-4838-8aeb-0cd4f8bd4a53)
+
 ## What’s inside (mapped to TODO.md)
 
 - **Authentication:** Email + password to request OTP, then 6-digit OTP verification (`123456` mock) with error toasts and disabled loading state.

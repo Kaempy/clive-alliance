@@ -6,9 +6,12 @@ describe('Receipt', () => {
     render(<Receipt />);
 
     expect(screen.getByText(/transaction receipt/i)).toBeOnTheScreen();
-    expect(screen.getByText(/1st november, 2024 1:20:22 pm/i)).toBeOnTheScreen();
-    expect(screen.getByText(/transaction amount/i)).toBeOnTheScreen();
-    expect(screen.getByText(/n 63, 250\.00/i)).toBeOnTheScreen();
+    expect(screen.getByText(/01 november, 2024/i)).toBeOnTheScreen();
+    expect(screen.getByLabelText('transaction-amount')).toHaveTextContent('₦63,250.00');
+    expect(screen.getByLabelText('transaction-type')).toHaveTextContent(/inter-bank/i);
+    expect(screen.getByLabelText('sender')).toHaveTextContent(/nnamdi okeke/i);
+    expect(screen.getByLabelText('beneficiary')).toBeOnTheScreen();
+    expect(screen.getByLabelText('reference')).toBeOnTheScreen();
     expect(screen.getByText(/disclaimer/i)).toBeOnTheScreen();
   });
 });

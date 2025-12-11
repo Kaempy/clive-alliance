@@ -1,5 +1,7 @@
 import { sendMoneySchema, SendMoneyType } from '@/lib/validation/send-money';
+import { transfer } from '@/services/transfer';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -38,30 +40,33 @@ const SendMoney = () => {
   const form = useForm<SendMoneyType>({
     resolver: zodResolver(sendMoneySchema),
   });
-  const {
-    setValue,
-    handleSubmit,
-    reset,
-    formState: { isSubmitting },
-  } = form;
+  const { setValue, handleSubmit, reset } = form;
   const handleAmountPress = (amount: string) => {
     setValue('amount', amount);
   };
-  const onSubmit = async (data: SendMoneyType) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(data);
+  const { mutate, isPending } = useMutation({
+    mutationFn: transfer,
+    onSuccess: (data) => {
       toast.success('Success!', {
         description: 'Money sent successfully.',
       });
       reset();
-      router.push('/(screen)/receipt');
-    } catch (error) {
-      console.log('error', error);
-      toast.error('Failed!', {
-        description: 'An error occurred while sending money.',
+      router.push({
+        pathname: '/(screen)/receipt',
+        params: {
+          receipt: JSON.stringify(data.receipt),
+        },
       });
-    }
+    },
+
+    onError: (error) => {
+      toast.error('Failed!', {
+        description: error instanceof Error ? error.message : 'Please try again',
+      });
+    },
+  });
+  const onSubmit = async (data: SendMoneyType) => {
+    mutate(data);
   };
   return (
     <View className="flex-1 justify-between gap-6 px-6 py-4">
@@ -135,8 +140,8 @@ const SendMoney = () => {
             }}
           />
         </View>
-        <Button variant="primary" onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
-          {isSubmitting ? 'Sending...' : 'Continue'}
+        <Button variant="primary" onPress={handleSubmit(onSubmit)} disabled={isPending}>
+          {isPending ? 'Sending...' : 'Continue'}
         </Button>
       </FormProvider>
     </View>

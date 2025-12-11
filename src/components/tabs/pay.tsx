@@ -116,7 +116,7 @@ const Pay: React.FC = () => {
                     {option.description}
                   </Text>
                 </View>
-                <ChevronRight size={20} />
+                <ChevronRight size={20} color="#032211" />
               </Pressable>
             ))}
           </View>
