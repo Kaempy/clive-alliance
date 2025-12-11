@@ -13,7 +13,7 @@ const items = [
 ];
 const Receipt = () => {
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1">
       <View className="flex- flex-row items-center justify-center gap-2 px-6">
         <View className="flex-shrink-0">
           <Image source={logo} className="h-[40px] w-[40px]" resizeMode="contain" />

@@ -107,8 +107,9 @@ const Login = ({ onDismiss }: LoginProps) => {
             variant="primary"
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
-            className="my-8">
-            {isSubmitting ? 'Logging in...' : 'Login'}
+            className="my-8"
+            accessibilityLabel="submit-button">
+            <Text>{isSubmitting ? 'Logging in...' : 'Login'}</Text>
           </Button>
         </FormProvider>
       </View>

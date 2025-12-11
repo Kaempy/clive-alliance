@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { toast } from 'sonner-native';
 import Button from '../ui/Button';
 import FormField from '../ui/FormField';
 import FormSelect from '../ui/FormSelect';
@@ -40,18 +41,30 @@ const SendMoney = () => {
   const {
     setValue,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = form;
   const handleAmountPress = (amount: string) => {
     setValue('amount', amount);
   };
   const onSubmit = async (data: SendMoneyType) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
-    router.push('/(screen)/receipt');
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log(data);
+      toast.success('Success!', {
+        description: 'Money sent successfully.',
+      });
+      reset();
+      router.push('/(screen)/receipt');
+    } catch (error) {
+      console.log('error', error);
+      toast.error('Failed!', {
+        description: 'An error occurred while sending money.',
+      });
+    }
   };
   return (
-    <View className="flex-1 justify-between gap-6 bg-white px-6 py-4">
+    <View className="flex-1 justify-between gap-6 px-6 py-4">
       <FormProvider {...form}>
         <View className="gap-6">
           <FormSelect

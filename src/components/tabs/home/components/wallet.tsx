@@ -3,17 +3,23 @@ import * as Clipboard from 'expo-clipboard';
 import { Copy, Eye, EyeOff } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-const Wallet = () => {
+
+type WalletProps = {
+  balance: number;
+  lastUpdated: string;
+};
+
+const Wallet: React.FC<WalletProps> = ({ balance, lastUpdated }: WalletProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [accountNumber] = useState('02396728366');
 
   const handleVisible = () => {
     setIsVisible(!isVisible);
   };
-  const copyToClipboard = async () => {
+  const copyToClipboard = async (): Promise<void> => {
     await Clipboard.setStringAsync(`Account Number: ${accountNumber}`);
   };
-  const balance = isVisible ? '************' : formatCurrency(500000);
+  const displayBalance = isVisible ? '************' : formatCurrency(balance);
   return (
     <View className="gap-3">
       <View className="flex-row items-center gap-1">
@@ -24,8 +30,8 @@ const Wallet = () => {
       <View className="flex-row items-center gap-1">
         <View className="flex-1 gap-1">
           <Text className="text-sm font-medium text-[#404040]">Your Balance</Text>
-          <Text className="text-2xl font-semibold text-header1">{balance} </Text>
-          <Text className="text-[10px] font-medium text-grey">Last Updated: 20 mins ago </Text>
+          <Text className="text-2xl font-semibold text-header1">{displayBalance} </Text>
+          <Text className="text-[10px] font-medium text-grey">Last Updated: {lastUpdated} </Text>
         </View>
         <Pressable onPress={handleVisible} className="text-[#404040]">
           {isVisible ? <Eye size={20} /> : <EyeOff size={20} />}

@@ -147,7 +147,9 @@ const PasswordInput = memo(
         />
         <Pressable
           className="me-2 shrink-0 items-center justify-center p-2"
-          onPress={handleShowPassword}>
+          onPress={handleShowPassword}
+          accessibilityRole="button"
+          accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}>
           {showPassword ? <EyeClosed color="black" size={20} /> : <Eye color="black" size={20} />}
         </Pressable>
       </Pressable>

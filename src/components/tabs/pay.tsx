@@ -70,7 +70,7 @@ const paymentOptions: Record<string, PaymentOption[]> = {
 
 const Pay: React.FC = () => {
   return (
-    <View className="flex-1 gap-8 bg-white p-4">
+    <View className="flex-1 gap-8 p-4">
       <View className="gap-4">
         <View className="flex-row items-center justify-between">
           <Text className="text-base font-semibold text-[#045227]">Beneficiaries</Text>

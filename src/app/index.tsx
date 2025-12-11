@@ -1,8 +1,5 @@
-import Onboarding from '@/components/welcome';
-import React from 'react';
+import Welcome from '@/components/welcome';
 
-const WelcomeScreen = () => {
-  return <Onboarding />;
-};
+const WelcomeScreen = () => <Welcome />;
 
 export default WelcomeScreen;

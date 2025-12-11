@@ -23,6 +23,6 @@ export const styles = StyleSheet.create({
   },
   gradientEffect: {
     position: 'absolute',
-    top: -18,
+    top: -10,
   },
 });

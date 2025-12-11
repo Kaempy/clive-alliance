@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "zikora",
+    "name": "Zikora",
     "slug": "zikora",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "zikora",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
