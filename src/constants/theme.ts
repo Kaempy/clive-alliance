@@ -9,7 +9,7 @@ export const Colors = {
   primary: '#66A681',
   text: '#A5A5A5',
   background: '#fff',
-  tint: '#66A681',
+  tint: '#032211',
   icon: '#687076',
   tabIconDefault: '#687076',
   tabIconSelected: '#66A681',

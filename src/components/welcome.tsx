@@ -6,7 +6,7 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Login from './login';
@@ -15,8 +15,9 @@ import Button from './ui/Button';
 const img = require('../../assets/public/onboarding.png');
 
 const Welcome = () => {
+  const [next, setNext] = useState(false);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ['85%'], []);
+  const snapPoints = useMemo(() => (next ? ['65%'] : ['85%']), [next]);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -83,7 +84,7 @@ const Welcome = () => {
         backgroundStyle={styles.bottomSheetBackground}
         handleIndicatorStyle={styles.handleIndicator}>
         <BottomSheetView className="h-full">
-          <Login onDismiss={onDismiss} />
+          <Login onDismiss={onDismiss} setNext={setNext} next={next} />
         </BottomSheetView>
       </BottomSheetModal>
     </SafeAreaView>

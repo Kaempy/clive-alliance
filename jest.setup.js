@@ -14,32 +14,41 @@ jest.mock('react-native-worklets', () => ({
   isSharedValue: jest.fn(() => false),
 }));
 
-// Mock the bare import of react-native-reanimated
-jest.mock('react-native-reanimated', () => ({}), { virtual: true });
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
-// Mock React Native Reanimated (complete mock to avoid setup issues)
-jest.mock('react-native-reanimated', () => {
-  const mockReactNative = require('react-native');
-  // const mockReact = require('react');
-  return {
-    default: {
+// Mock React Native Reanimated (single mock, keep virtual for module resolution)
+jest.mock(
+  'react-native-reanimated',
+  () => {
+    const mockReactNative = require('react-native');
+    const Reanimated = require('react-native-reanimated/mock');
+
+    // keep helpers expected in our code/tests
+    Reanimated.useSharedValue = jest.fn(() => ({ value: 0 }));
+    Reanimated.useAnimatedStyle = jest.fn(() => ({}));
+    Reanimated.withTiming = jest.fn((value) => value);
+    Reanimated.withSpring = jest.fn((value) => value);
+    Reanimated.runOnJS = jest.fn((fn) => fn);
+    Reanimated.runOnUI = jest.fn((fn) => fn);
+    Reanimated.interpolate = jest.fn();
+    Reanimated.Extrapolate = { CLAMP: 'clamp' };
+    Reanimated.setUpTests = jest.fn();
+
+    // ensure default export exists for default imports
+    Reanimated.default = {
+      ...Reanimated.default,
       View: mockReactNative.View,
       Text: mockReactNative.Text,
       Image: mockReactNative.Image,
       ScrollView: mockReactNative.ScrollView,
       FlatList: mockReactNative.FlatList,
-    },
-    useSharedValue: jest.fn(() => ({ value: 0 })),
-    useAnimatedStyle: jest.fn(() => ({})),
-    withTiming: jest.fn((value) => value),
-    withSpring: jest.fn((value) => value),
-    runOnJS: jest.fn((fn) => fn),
-    interpolate: jest.fn(),
-    Extrapolate: { CLAMP: 'clamp' },
-    setUpTests: jest.fn(),
-  };
-});
+      call: () => {},
+    };
+
+    return Reanimated;
+  },
+  { virtual: true },
+);
 
 // Mock expo-router
 jest.mock('expo-router', () => {
@@ -236,10 +245,15 @@ jest.mock('expo-linear-gradient', () => {
   };
 });
 
-// Mock clsx and tailwind-merge
-jest.mock('clsx', () => ({
-  clsx: jest.fn((...args) => args.filter(Boolean).join(' ')),
-}));
+// Mock clsx (support default and named export)
+jest.mock('clsx', () => {
+  const clsx = jest.fn((...args) => args.filter(Boolean).join(' '));
+  return {
+    __esModule: true,
+    default: clsx,
+    clsx,
+  };
+});
 
 jest.mock('tailwind-merge', () => ({
   twMerge: jest.fn((str) => str),
@@ -256,28 +270,34 @@ jest.mock('date-fns', () => ({
   subMinutes: jest.fn(() => new Date()),
 }));
 
-// Mock react-native-dropdown-picker
+// Mock react-native-dropdown-picker (align with default import usage)
 jest.mock('react-native-dropdown-picker', () => {
   const mockReactNative = require('react-native');
   const mockReact = require('react');
-  return ({ items = [], value, setValue, placeholder, open, setOpen, setItems, ...props }) => {
-    return mockReact.createElement(
-      mockReactNative.View,
-      { testID: 'dropdown-picker', ...props },
-      placeholder && mockReact.createElement(mockReactNative.Text, null, placeholder),
-      items.map((item) =>
-        mockReact.createElement(
-          mockReactNative.Pressable,
-          {
-            key: item.value,
-            onPress: () => setValue && setValue(() => item.value),
-          },
-          mockReact.createElement(mockReactNative.Text, null, item.label),
+
+  const MockDropdownPicker = jest.fn(
+    ({ items = [], value, setValue, placeholder, open, setOpen, setItems, ...props }) =>
+      mockReact.createElement(
+        mockReactNative.View,
+        { testID: 'dropdown-picker', ...props },
+        placeholder && mockReact.createElement(mockReactNative.Text, null, placeholder),
+        items.map((item) =>
+          mockReact.createElement(
+            mockReactNative.Pressable,
+            {
+              key: item.value,
+              onPress: () => setValue && setValue(() => item.value),
+            },
+            mockReact.createElement(mockReactNative.Text, null, item.label),
+          ),
         ),
+        value && mockReact.createElement(mockReactNative.Text, { testID: 'selected-value' }, value),
       ),
-      value && mockReact.createElement(mockReactNative.Text, { testID: 'selected-value' }, value),
-    );
-  };
+  );
+
+  MockDropdownPicker.displayName = 'MockDropdownPicker';
+
+  return { __esModule: true, default: MockDropdownPicker };
 });
 
 // Mock store
@@ -301,6 +321,7 @@ jest.mock('zod', () => {
     min: jest.fn(() => createChainableMock()),
     toLowerCase: jest.fn(() => createChainableMock()),
     email: jest.fn(() => createChainableMock()),
+    optional: jest.fn(() => createChainableMock()),
   });
 
   return {

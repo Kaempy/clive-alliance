@@ -1,17 +1,23 @@
 import { cn } from '@/lib';
 import { loginSchema, LoginSchema } from '@/lib/validation/login';
+import { login } from '@/services/login';
 import { useStoreSelectors } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, router } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
+import { Link } from 'expo-router';
 import { Phone } from 'lucide-react-native';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Pressable, Text, View } from 'react-native';
+import { toast } from 'sonner-native';
 import Button from './ui/Button';
 import FormField from './ui/FormField';
+import VerifyPin from './verifyPin';
 
 interface LoginProps {
   onDismiss: () => void;
+  setNext: Dispatch<SetStateAction<boolean>>;
+  next: boolean;
 }
 const tabs = [
   { label: 'Personal Account', value: 'personal' },
@@ -20,7 +26,7 @@ const tabs = [
     value: 'business',
   },
 ];
-const Login = ({ onDismiss }: LoginProps) => {
+const Login = ({ onDismiss, setNext, next }: LoginProps) => {
   const { setCredentials } = useStoreSelectors();
   const form = useForm<LoginSchema>({
     defaultValues: {
@@ -29,30 +35,32 @@ const Login = ({ onDismiss }: LoginProps) => {
     },
     resolver: zodResolver(loginSchema),
   });
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form;
+  const { handleSubmit } = form;
+  const { mutate, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      toast.info('OTP sent', {
+        description: data.message,
+      });
+      setNext(true);
+    },
+    onError: (error) => {
+      toast.error('Failed to login', {
+        description: error instanceof Error ? error.message : 'Please try again',
+      });
+    },
+  });
   const onSubmit = async (data: LoginSchema) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setCredentials({
-      user: {
-        id: '1234567890',
-        email: data.email,
-        name: 'Richard',
-      },
-      token: '1234567890',
-      refresh_token: '1234567890',
-    });
-    onDismiss();
-    router.push('/(tabs)');
+    mutate(data);
   };
 
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]['value']>('personal');
   const handleTabPress = (value: (typeof tabs)[number]['value']) => {
     setActiveTab(value);
   };
-  return (
+  return next ? (
+    <VerifyPin onDismiss={onDismiss} />
+  ) : (
     <View className="flex-1 justify-between gap-4 p-4 pb-8">
       <View className="flex-row items-center justify-center gap-2 rounded-full bg-[#E7E7E7] p-1">
         {tabs.map((tab) => (
@@ -106,10 +114,10 @@ const Login = ({ onDismiss }: LoginProps) => {
           <Button
             variant="primary"
             onPress={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
+            disabled={isPending}
             className="my-8"
             accessibilityLabel="submit-button">
-            <Text>{isSubmitting ? 'Logging in...' : 'Login'}</Text>
+            {isPending ? 'Logging in...' : 'Login'}
           </Button>
         </FormProvider>
       </View>

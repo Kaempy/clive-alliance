@@ -1,337 +1,101 @@
-# Zikora - Fintech Mobile App 💰
+# Zikora - Fintech Mobile App
 
-A performant, production-ready React Native fintech mobile application built with Expo, designed to run smoothly on low-RAM Android devices (≤ 3 GB RAM).
+React Native + Expo mobile challenge aligned to the requirements in `TODO.md`: low-RAM Android support, OTP login, paginated transactions, money transfer, and testing.
 
-## 📱 Features
+## What’s inside (mapped to TODO.md)
 
-- **🔐 Authentication** - Email + 6-digit OTP login flow
-- **🏦 Account Management** - View balance and account details
-- **📊 Transactions** - Optimized list handling 3,000+ transactions
-- **💸 Money Transfer** - Send money with validation and success states
-- **👥 Beneficiaries** - Manage and select payment recipients
-- **♻️ Pull-to-Refresh** - Update data with smooth animations
-- **🎨 Modern UI** - Faithful implementation of Figma designs
-- **📴 Offline Support** - Graceful offline handling with MMKV persistence
+- **Authentication:** Email + password to request OTP, then 6-digit OTP verification (`123456` mock) with error toasts and disabled loading state.
+- **Home / Accounts:** Balance card with last-updated indicator and pull-to-refresh.
+- **Transactions:** Virtualized `FlatList` over the 3,000+ item mock dataset with pagination via React Query; `getItemLayout`, `removeClippedSubviews`, and tuned render windows to avoid memory churn.
+- **Transfer (Send Money):** Form validation with Zod + React Hook Form and disabled submit during mutation.
+- **Beneficiaries & quick actions:** Shortcuts to pay/transfer flows; reusable UI components for consistent theming.
+- **Testing:** Six component/unit tests covering buttons, form fields/selects, home, login, and receipt screens.
+- **Docs:** `PERF.md` for performance choices; `TESTS.md` for coverage and next steps.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-### Core
+- **Core:** React Native 0.81.5, Expo ~54, TypeScript (strict), Expo Router.
+- **UI:** NativeWind (Tailwind), Lucide icons, SVG, gradients.
+- **State & Data:** Zustand + MMKV wrapper, TanStack Query for mock network/pagination.
+- **Forms & Validation:** React Hook Form, Zod + `@hookform/resolvers`.
+- **Testing & Quality:** Jest + `@testing-library/react-native`, ESLint, Prettier, Husky hooks.
 
-- **React Native** 0.81.5 + **Expo** ~54.0
-- **TypeScript** ~5.9.2 (strict mode)
-- **Expo Router** ~6.0 (file-based routing)
-
-### UI & Styling
-
-- **NativeWind** 4.2 (Tailwind CSS for React Native)
-- **Lucide React Native** (icons)
-- **React Native SVG** (vector graphics)
-- **Expo Linear Gradient** (gradients)
-
-### State Management
-
-- **Zustand** 5.0 (lightweight state)
-- **React Native MMKV** 4.1 (fast persistence)
-- **Immer** 11.0 (immutable updates)
-
-### Forms & Validation
-
-- **React Hook Form** 7.68
-- **Zod** 4.1 (schema validation)
-- **@hookform/resolvers** 5.2
-
-### Performance
-
-- **@shopify/flash-list** 2.0 (optimized lists)
-- **React Native Reanimated** 4.1 (smooth animations)
-- **Hermes Engine** (enabled for Android)
-
-### Testing & Quality
-
-- **Jest** 29.7 + **jest-expo** 54.0
-- **@testing-library/react-native** 13.3
-- **ESLint** 9.25 + **Prettier** 3.7
-- **Husky** 9.1 (Git hooks)
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js 18+ and npm/yarn
-- Expo CLI (`npm install -g expo-cli`)
-- For Android: Android Studio with emulator
-- For iOS: Xcode with simulator (macOS only)
-
-### Installation
+## Quick start
 
 ```bash
-# Clone the repository
 git clone <repository-url>
 cd clive-alliance
-
-# Install dependencies
 npm install
-
-# Start the development server
-npm start
+npm start             # Expo dev server
+npm run android       # Android device/emulator
+npm run ios           # iOS simulator
+npm run web           # Web preview
 ```
 
-### Running on Devices
+## Scripts
 
-```bash
-# iOS Simulator
-npm run ios
+| Script                 | Description                          |
+| ---------------------- | ------------------------------------ |
+| `npm start`            | Start Expo dev server (clears cache) |
+| `npm run android`      | Build/run Android app                |
+| `npm run ios`          | Build/run iOS app                    |
+| `npm run web`          | Start web preview                    |
+| `npm test`             | Jest in watch mode                   |
+| `npm run test:ci`      | Jest with coverage, CI-safe          |
+| `npm run lint`         | Expo lint over `src`                 |
+| `npm run check-types`  | TypeScript `--noEmit`                |
+| `npm run check-format` | Prettier check                       |
+| `npm run test-all`     | Format check → lint → typecheck      |
 
-# Android Emulator
-npm run android
+## Project structure
 
-# Web (for quick testing)
-npm run web
+```
+src/
+├── app/             # Expo Router routes
+├── components/      # Screens + reusable UI
+├── hooks/           # Custom hooks (pagination, theme)
+├── lib/             # Utilities + validation schemas
+├── services/        # Mock APIs (login, transactions, transfer)
+├── store/           # Zustand store + selectors
+├── types/           # Shared types
+└── __tests__/       # Jest + RTL tests
+assets/              # Images & icons
+PERF.md              # Performance decisions
+TESTS.md             # Test coverage and plans
+TODO.md              # Challenge requirements
 ```
 
-## 📂 Project Structure
+## Performance notes (high level)
 
-```
-clive-alliance/
-├── src/
-│   ├── app/                    # Expo Router screens
-│   │   ├── (tabs)/            # Tab navigation screens
-│   │   ├── (screen)/          # Modal/stack screens
-│   │   ├── _layout.tsx        # Root layout
-│   │   └── index.tsx          # Entry point
-│   ├── components/            # Reusable components
-│   │   ├── tabs/             # Tab-specific components
-│   │   ├── screen/           # Screen-specific components
-│   │   └── ui/               # Shared UI components
-│   ├── hooks/                # Custom React hooks
-│   ├── icons/                # SVG icon components
-│   ├── lib/                  # Utilities and helpers
-│   │   └── validation/       # Zod schemas
-│   ├── store/                # Zustand stores
-│   │   └── reducers/         # State slices
-│   ├── types/                # TypeScript definitions
-│   ├── constants/            # App constants
-│   ├── styles.ts             # Shared styles
-│   └── __tests__/            # Test files
-├── assets/                   # Images, fonts, etc.
-├── .husky/                   # Git hooks
-├── PERF.md                   # Performance notes
-├── TESTS.md                  # Testing documentation
-└── TODO.md                   # Project requirements
-```
+- Hermes enabled for Android in `app.json`.
+- `FlatList` tuned for low-RAM devices: `getItemLayout`, `removeClippedSubviews`, `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, and stable `keyExtractor`.
+- Pagination via React Query (`useTransactionsPagination`) with 50-item pages to cap memory and network cost.
+- Memoized transaction rows and lightweight theming to reduce re-renders. Details in `PERF.md`.
 
-## 🧪 Testing
+## Testing
 
-### Run Tests
+- Six Jest tests in `src/__tests__` covering Button, FormField, FormSelect, Home, Login, and Receipt.
+- Run locally: `npm test` (watch) or `npm run test:ci` (coverage). See `TESTS.md` for what’s covered and gaps (integration/E2E plans).
 
-```bash
-# Run tests in watch mode (development)
-npm test
+## Security & reliability
 
-# Run tests once with coverage (CI)
-npm run test:ci
-```
+- No secrets committed; mock APIs only.
+- Inputs validated with Zod; OTP uses secure entry.
+- Toasted error paths for login/OTP; pagination requests avoid retries on repeated failures.
+- Follow Expo lint + Prettier via Husky pre-commit.
 
-### Linting & Formatting
+## Deliverables checklist (from TODO.md)
 
-```bash
-# Lint code
-npm run lint
+- Hermes on Android, low-RAM friendly lists, OTP 123456 acceptance.
+- Uses provided mock JSON for transactions/beneficiaries.
+- `PERF.md` (list optimizations) and `TESTS.md` (coverage + future work).
+- Scripts for lint, typecheck, and tests.
+- Recordings/screenshots can be attached when submitting the challenge.
 
-# Check formatting
-npm run check-format
+## Troubleshooting
 
-# Format code
-npm run format
+- Metro cache: `npm start -- --reset-cache`
+- Android clean: `cd android && ./gradlew clean && cd ..`
+- iOS pods: `cd ios && pod install && cd ..`
 
-# Type check
-npm run check-types
-
-# Run all checks
-npm run test-all
-```
-
-### Pre-commit Hooks
-
-Automatic checks run on every commit:
-
-- ✅ ESLint with auto-fix
-- ✅ Prettier formatting
-- ✅ Only on staged files
-
-## 📊 Performance Optimization
-
-This app is optimized for low-RAM Android devices (2-3 GB):
-
-- **FlashList** for efficient list rendering (3,000+ items)
-- **Hermes Engine** for faster startup and reduced memory
-- **MMKV** for fast, synchronous storage
-- **Memoization** to prevent unnecessary re-renders
-- **Code splitting** for smaller initial bundle
-
-See [PERF.md](./PERF.md) for detailed optimization notes.
-
-## 🧩 Key Features Implementation
-
-### Authentication Flow
-
-```typescript
-// OTP Login: Accept 123456
-// Invalid OTP handling with error states
-// Zustand + MMKV for persistent auth
-```
-
-### Transaction List
-
-```typescript
-// FlashList with 3,000+ items
-// Optimized rendering with memoization
-// No crashes on 2GB RAM devices
-```
-
-### Money Transfer
-
-```typescript
-// Form validation with Zod
-// Disabled state during submission
-// Success/fail states with feedback
-```
-
-## 📜 Available Scripts
-
-| Script                | Description                   |
-| --------------------- | ----------------------------- |
-| `npm start`           | Start Expo development server |
-| `npm run android`     | Run on Android emulator       |
-| `npm run ios`         | Run on iOS simulator          |
-| `npm run web`         | Run in web browser            |
-| `npm test`            | Run tests in watch mode       |
-| `npm run test:ci`     | Run tests with coverage (CI)  |
-| `npm run lint`        | Lint code with ESLint         |
-| `npm run format`      | Format code with Prettier     |
-| `npm run check-types` | TypeScript type checking      |
-| `npm run test-all`    | Run all quality checks        |
-
-## 🔧 Configuration
-
-### Hermes Engine
-
-Enabled in `app.json` for Android:
-
-```json
-{
-  "expo": {
-    "android": {
-      "jsEngine": "hermes"
-    }
-  }
-}
-```
-
-### TypeScript
-
-Strict mode enabled in `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
-  }
-}
-```
-
-## 📱 Device Requirements
-
-### Android
-
-- Android 10+ (API 29+)
-- 2-3 GB RAM minimum
-- Screen: 1080 x 2280 recommended
-
-### iOS
-
-- iOS 13+
-- iPhone 8 and above
-
-## 🎨 Design System
-
-The app follows the Zikora Figma designs with:
-
-- **Primary Color:** `#608E75` (green)
-- **Typography:** System fonts optimized for readability
-- **Spacing:** 4px base unit (Tailwind scale)
-- **Components:** Consistent, reusable UI patterns
-
-## 🔒 Security
-
-- ✅ No hardcoded secrets or API keys
-- ✅ Sensitive inputs masked (passwords, OTP)
-- ✅ Secure storage with MMKV
-- ✅ Input validation and sanitization
-
-## 📚 Documentation
-
-- [PERF.md](./PERF.md) - Performance optimization strategies
-- [TESTS.md](./TESTS.md) - Testing approach and coverage
-- [TODO.md](./TODO.md) - Project requirements and checklist
-
-## 🐛 Troubleshooting
-
-### Metro bundler issues
-
-```bash
-npm start -- --reset-cache
-```
-
-### Android build issues
-
-```bash
-cd android && ./gradlew clean && cd ..
-npm run android
-```
-
-### iOS build issues
-
-```bash
-cd ios && pod install && cd ..
-npm run ios
-```
-
-## 🤝 Development Workflow
-
-1. **Create feature branch** - `git checkout -b feature/name`
-2. **Make changes** - Edit code with hot reload
-3. **Test locally** - Run `npm test`
-4. **Commit** - Pre-commit hooks run automatically
-5. **Push** - Pre-push runs full test suite
-6. **Create PR** - Review and merge
-
-## 📈 Performance Benchmarks
-
-Tested on Android Emulator (2 GB RAM):
-
-- ✅ **Cold start:** < 3 seconds
-- ✅ **List scroll:** 60 FPS with 3,000+ items
-- ✅ **Memory usage:** < 300 MB
-- ✅ **No OOM crashes** with large datasets
-
-## 🙏 Acknowledgments
-
-Built with:
-
-- [Expo](https://expo.dev) - Universal React Native framework
-- [NativeWind](https://nativewind.dev) - Tailwind CSS for React Native
-- [Zustand](https://zustand.docs.pmnd.rs) - Simple state management
-- [Shopify FlashList](https://shopify.github.io/flash-list/) - High-performance lists
-
-## 📄 License
-
-This project is part of a coding challenge for Zikora/Clive Alliance.
-
----
-
-**Built with ❤️ using React Native + Expo**
-
-For questions or issues, please refer to the documentation or create an issue in the repository.
+This project is for the Zikora/Clive Alliance mobile challenge. Contributions and feedback are welcome while keeping to the supplied Figma and requirements.

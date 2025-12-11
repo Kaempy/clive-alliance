@@ -1,11 +1,13 @@
 import { Data, Help, Savings, Transfer } from '@/icons';
 import { cn } from '@/lib';
+import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 const quickActions = [
   {
     icon: Transfer,
     label: 'Transfer',
+    onPress: () => router.push('/(screen)/pay'),
   },
 
   {
@@ -25,7 +27,7 @@ const QuickActions = () => {
   return (
     <View className="flex-row items-center justify-between rounded-xl bg-[#002210] p-6">
       {quickActions.map((action) => (
-        <Pressable key={action.label}>
+        <Pressable key={action.label} onPress={action.onPress}>
           {({ pressed }) => (
             <View className={cn('items-center justify-between gap-2', pressed && 'opacity-75')}>
               <View className="items-center justify-center rounded-full bg-[#F0FFF7] p-3">

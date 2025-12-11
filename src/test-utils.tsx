@@ -1,8 +1,9 @@
 import { Colors } from '@/constants/theme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, type RenderOptions } from '@testing-library/react-native';
-import React, { type JSX, type ReactElement } from 'react';
+import React, { useState, type JSX, type ReactElement } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
@@ -38,29 +39,42 @@ interface ProvidersProps {
  * 3. GestureHandlerRootView - Gesture handler root context
  * 4. BottomSheetModalProvider - Bottom sheet modal context
  * 5. Toaster - Toast notification provider (mocked in tests)
+ * 6. QueryClientProvider - React Query context for data hooks
  *
  * Note: Stack and StatusBar are NOT included because:
  * - Stack: Used for navigation/routing, not needed for component unit tests (already mocked in jest.setup.js)
  * - StatusBar: System-level component for device status bar, not relevant in test environment
  */
 const Providers = ({ children }: ProvidersProps): JSX.Element => {
+  const [client] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { retry: false, staleTime: 0 },
+          mutations: { retry: false },
+        },
+      }),
+  );
+
   return (
     <ThemeProvider value={LightTheme}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{ flex: 1, backgroundColor: Colors.background }}>
-          <BottomSheetModalProvider>
-            {children}
-            <Toaster
-              position="bottom-center"
-              richColors
-              autoWiggleOnUpdate="toast-change"
-              duration={2000}
-              theme="light"
-              visibleToasts={1}
-              swipeToDismissDirection="left"
-              offset={100}
-            />
-          </BottomSheetModalProvider>
+          <QueryClientProvider client={client}>
+            <BottomSheetModalProvider>
+              {children}
+              <Toaster
+                position="bottom-center"
+                richColors
+                autoWiggleOnUpdate="toast-change"
+                duration={2000}
+                theme="light"
+                visibleToasts={1}
+                swipeToDismissDirection="left"
+                offset={100}
+              />
+            </BottomSheetModalProvider>
+          </QueryClientProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     </ThemeProvider>

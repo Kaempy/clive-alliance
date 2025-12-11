@@ -1,6 +1,8 @@
 import { Colors } from '@/constants/theme';
+import queryClient from '@/services/api/queryClient';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -29,28 +31,30 @@ const RootLayout = () => {
     <ThemeProvider value={LightTheme}>
       <SafeAreaProvider>
         <GestureHandlerRootView className="flex-1" style={{ backgroundColor: Colors.background }}>
-          <BottomSheetModalProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                contentStyle: { backgroundColor: Colors.background },
-              }}>
-              <Stack.Screen name="index" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="(screen)" />
-            </Stack>
-            <Toaster
-              position="bottom-center"
-              richColors
-              autoWiggleOnUpdate="toast-change"
-              duration={2000}
-              theme="light"
-              visibleToasts={1}
-              swipeToDismissDirection="left"
-              offset={100}
-            />
-          </BottomSheetModalProvider>
-          <StatusBar style="auto" />
+          <QueryClientProvider client={queryClient}>
+            <BottomSheetModalProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: Colors.background },
+                }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="(screen)" />
+              </Stack>
+              <Toaster
+                position="bottom-center"
+                richColors
+                autoWiggleOnUpdate="toast-change"
+                duration={750}
+                theme="light"
+                visibleToasts={1}
+                swipeToDismissDirection="left"
+                offset={100}
+              />
+              <StatusBar style="auto" />
+            </BottomSheetModalProvider>
+          </QueryClientProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     </ThemeProvider>

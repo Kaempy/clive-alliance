@@ -4281,6 +4281,11 @@ expo-modules-core@3.0.28:
   dependencies:
     invariant "^2.2.4"
 
+expo-network@~8.0.8:
+  version "8.0.8"
+  resolved "https://registry.yarnpkg.com/expo-network/-/expo-network-8.0.8.tgz#d8eb25b60a93b010e635192f343d3a955a763df5"
+  integrity sha512-dgrL8UHAmWofqeY4UEjWskCl/RoQAM0DG6PZR8xz2WZt+6aQEboQgFRXowCfhbKZ71d16sNuKXtwBEsp2DtdNw==
+
 expo-router@~6.0.17:
   version "6.0.17"
   resolved "https://registry.yarnpkg.com/expo-router/-/expo-router-6.0.17.tgz#99b52adaad43e8fe9e90442acb8895601545424c"
@@ -7463,6 +7468,11 @@ react-native-nitro-modules@^0.31.10:
   version "0.31.10"
   resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.31.10.tgz#d21907327200d5761ba6cf328dec36b1516bc270"
   integrity sha512-hcvjTu9YJE9fMmnAUvhG8CxvYLpOuMQ/2eyi/S6GyrecezF6Rmk/uRQEL6v09BRFWA/xRVZNQVulQPS+2HS3mQ==
+
+react-native-otp-entry@^1.8.5:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/react-native-otp-entry/-/react-native-otp-entry-1.8.5.tgz#e5893040e1b0540c6febb89b1b29a1729277c1df"
+  integrity sha512-TZNkIuUzZKAAWrC8X/A22ZHJdycLysxUNysrGf0yTmDLRUyf4zLXwVFcDYUcRNe763Hjaf5qvtKGILb6lDGzoA==
 
 react-native-reanimated@~4.1.1:
   version "4.1.6"
