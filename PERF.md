@@ -43,5 +43,3 @@ Focus: satisfy `TODO.md` on low-RAM Android (≤3 GB) while rendering the 3k+ tr
 - Image lazy loading and skeleton placeholders on heavy screens.
 - Background prefetch for the next page when nearing the end of the current page.
 - Add perf assertions (FPS/memory) to automated test runs via profiling hooks.
-
-**Last Updated:** December 2025

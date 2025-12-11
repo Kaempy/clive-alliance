@@ -38,6 +38,3 @@ npm run test:ci    # coverage, CI-safe workers
 - **Performance (high):** assert 3k+ transaction render without OOM; profile scroll FPS on low-RAM emulator.
 - **Accessibility (medium):** roles/labels across primary flows; OTP focus order.
 - **E2E (medium):** Detox/Maestro for login → transactions → transfer happy path.
-
-**Last Updated:** December 2025  
-**Test Framework Version:** Jest 29.7.0
